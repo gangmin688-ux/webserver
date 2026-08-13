@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>서버 상태 보기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◆</span>
+      <span class="brand-name">서버 상태 보기</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- 서버 목록 사이드바 (방문자는 추가/삭제 불가) -->
+    <nav id="server-list" class="server-list">
+      <p class="empty-hint">등록된 서버가 없습니다.</p>
+    </nav>
+
+    <!-- 선택된 서버 상세 -->
+    <main id="server-detail" class="server-detail hidden">
+      <div class="detail-header">
+        <h1 id="detail-name">-</h1>
+        <div class="detail-header-right">
+          <div class="status-pill" id="status-pill">
+            <span class="status-dot"></span>
+            <span id="status-text">확인 중...</span>
+          </div>
+          <div class="players-pill" id="players-pill">👤 <span id="players-text">-- / --</span></div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <section class="card card-power">
+          <h2>전원</h2>
+          <div class="power-buttons">
+            <button id="btn-start" class="btn btn-start">서버 시작</button>
+          </div>
+          <p class="hint">서버가 이미 켜져 있으면 이 버튼은 아무 동작도 하지 않아요.</p>
+        </section>
+
+        <section class="card card-monitor">
+          <h2>리소스 모니터</h2>
+          <div class="meter-row">
+            <div class="meter">
+              <div class="meter-label">전체 CPU</div>
+              <div class="meter-bar"><div class="meter-fill" id="meter-cpu"></div></div>
+              <div class="meter-value" id="value-cpu">--%</div>
+            </div>
+            <div class="meter">
+              <div class="meter-label">전체 RAM</div>
+              <div class="meter-bar"><div class="meter-fill" id="meter-ram"></div></div>
+              <div class="meter-value" id="value-ram">--%</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card card-console">
+          <h2>실시간 콘솔 (보기 전용)</h2>
+          <div id="console-log" class="console-log"></div>
+        </section>
+
+        <section class="card card-map">
+          <h2>지도</h2>
+          <p class="hint" id="map-empty-hint">이 서버는 지도가 설정되어 있지 않습니다.</p>
+          <div id="map-frame-wrap" class="map-frame-wrap hidden">
+            <iframe id="map-frame" class="map-frame" src="" title="서버 지도" allowfullscreen></iframe>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <p id="empty-state" class="empty-state">왼쪽에서 서버를 선택해주세요.</p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="visitor.js"></script>
+</body>
+</html>
