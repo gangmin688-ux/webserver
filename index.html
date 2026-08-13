@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>서버 컴 대시보드</title>
+<title>서버 상태 보기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css" />
@@ -14,15 +14,14 @@
   <header class="topbar">
     <div class="brand">
       <span class="brand-mark">◆</span>
-      <span class="brand-name">서버 컴 대시보드</span>
+      <span class="brand-name">서버 상태 보기</span>
     </div>
-    <button id="btn-add-server" class="btn btn-add">+ 서버 추가</button>
   </header>
 
   <div class="layout">
-    <!-- 서버 목록 사이드바 -->
+    <!-- 서버 목록 사이드바 (방문자는 추가/삭제 불가) -->
     <nav id="server-list" class="server-list">
-      <p class="empty-hint">등록된 서버가 없습니다.<br/>오른쪽 위 "+ 서버 추가"를 눌러주세요.</p>
+      <p class="empty-hint">등록된 서버가 없습니다.</p>
     </nav>
 
     <!-- 선택된 서버 상세 -->
@@ -33,33 +32,18 @@
           <div class="status-pill" id="status-pill">
             <span class="status-dot"></span>
             <span id="status-text">확인 중...</span>
-            <span class="status-pid" id="status-pid"></span>
           </div>
           <div class="players-pill" id="players-pill">👤 <span id="players-text">-- / --</span></div>
-          <button id="btn-delete-server" class="btn btn-delete" title="이 서버를 대시보드에서 제거">서버 제거</button>
         </div>
       </div>
 
       <div class="grid">
         <section class="card card-power">
-          <h2>전원 제어</h2>
+          <h2>전원</h2>
           <div class="power-buttons">
             <button id="btn-start" class="btn btn-start">서버 시작</button>
-            <button id="btn-stop" class="btn btn-stop">서버 종료</button>
           </div>
-          <p class="hint">종료는 <code>stop</code> 명령으로 정상 종료를 시도한 뒤, 시간 초과 시 강제 종료합니다.</p>
-        </section>
-
-        <section class="card card-computer-power">
-          <h2>컴퓨터 전원</h2>
-          <p class="hint" id="computer-status-text">상태 확인 중...</p>
-          <div class="power-buttons">
-            <button id="btn-computer-shutdown" class="btn btn-stop">컴퓨터 종료</button>
-            <button id="btn-computer-restart" class="btn btn-stop">컴퓨터 재시작</button>
-            <button id="btn-computer-cancel" class="btn btn-cancel">종료/재시작 취소</button>
-          </div>
-          <p class="hint">컴퓨터를 끄기 전에 켜져 있는 마인크래프트 서버들을 먼저 정상 종료합니다 (최대 1분 대기).
-            종료 명령은 10초의 유예를 두고 실행되니, 실수로 누르셨으면 바로 "종료 취소"를 눌러주세요.</p>
+          <p class="hint">서버가 이미 켜져 있으면 이 버튼은 아무 동작도 하지 않아요.</p>
         </section>
 
         <section class="card card-monitor">
@@ -76,141 +60,30 @@
               <div class="meter-value" id="value-ram">--%</div>
             </div>
           </div>
-          <div class="meter-row">
-            <div class="meter">
-              <div class="meter-label">Java CPU</div>
-              <div class="meter-bar"><div class="meter-fill meter-fill-accent" id="meter-java-cpu"></div></div>
-              <div class="meter-value" id="value-java-cpu">--%</div>
-            </div>
-            <div class="meter">
-              <div class="meter-label">Java RAM</div>
-              <div class="meter-bar"><div class="meter-fill meter-fill-accent" id="meter-java-ram"></div></div>
-              <div class="meter-value" id="value-java-ram">--%</div>
-            </div>
-          </div>
         </section>
 
         <section class="card card-console">
-          <div class="card-header-row">
-            <h2>실시간 콘솔</h2>
-            <button id="btn-clear-console" class="btn btn-clear" type="button">콘솔 초기화</button>
-          </div>
+          <h2>실시간 콘솔 (보기 전용)</h2>
           <div id="console-log" class="console-log"></div>
-          <form id="command-form" class="command-form">
-            <input id="command-input" type="text" placeholder="명령어 입력 (예: say 안녕하세요, op 닉네임)" autocomplete="off" />
-            <button type="submit" class="btn btn-send">전송</button>
-          </form>
-        </section>
-
-        <section class="card card-properties">
-          <h2>server.properties</h2>
-          <div id="properties-list" class="properties-list"></div>
-          <button id="btn-save-properties" class="btn btn-save">저장</button>
-          <p id="properties-message" class="hint"></p>
-        </section>
-
-        <section class="card card-lists">
-          <h2>플레이어 관리</h2>
-          <div class="tab-buttons">
-            <button class="tab-btn active" data-tab="whitelist">화이트리스트</button>
-            <button class="tab-btn" data-tab="ops">관리자(OP)</button>
-            <button class="tab-btn" data-tab="bannedPlayers">밴된 플레이어</button>
-            <button class="tab-btn" data-tab="bannedIps">밴된 IP</button>
-          </div>
-          <ul id="lists-content" class="lists-content"></ul>
         </section>
 
         <section class="card card-map">
-          <div class="card-header-row">
-            <h2>지도</h2>
-            <button id="btn-map-settings" class="btn btn-clear" type="button">지도 주소 설정</button>
-          </div>
-          <p class="hint" id="map-empty-hint">
-            지도 포트가 설정되지 않았습니다. Pl3xMap 같은 지도 플러그인을 설치하고
-            "지도 주소 설정"을 눌러 로컬 포트 번호만 입력해주세요 (예: 8080).
-            주소는 에이전트가 cloudflared로 자동 터널링해서 알아서 채워줍니다.
-          </p>
+          <h2>지도</h2>
+          <p class="hint" id="map-empty-hint">이 서버는 지도가 설정되어 있지 않습니다.</p>
           <div id="map-frame-wrap" class="map-frame-wrap hidden">
             <iframe id="map-frame" class="map-frame" src="" title="서버 지도" allowfullscreen></iframe>
           </div>
         </section>
-
-        <section class="card card-tracker">
-          <h2>실시간 위치 추적</h2>
-          <p class="hint" id="tracker-empty-hint">PlayerTracker 플러그인이 설치되어 있고 서버가 켜져 있으면 여기 표시됩니다.</p>
-          <div class="tracker-table-wrap">
-            <table class="tracker-table" id="tracker-table">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>플레이어</th>
-                  <th>월드</th>
-                  <th>좌표</th>
-                  <th>바이옴</th>
-                  <th>장비</th>
-                  <th>보고 있는 블록</th>
-                </tr>
-              </thead>
-              <tbody id="tracker-tbody"></tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="card card-inventory">
-          <h2>인벤토리 보기</h2>
-          <p class="hint" id="inventory-empty-hint">위 표에서 플레이어를 클릭하면 인벤토리가 여기 표시됩니다.</p>
-          <div id="inventory-detail" class="inventory-detail hidden">
-            <div class="inv-player-header">
-              <img id="inv-player-avatar" class="player-avatar avatar-lg" src="" alt="" />
-              <span id="inv-player-name"></span>
-            </div>
-            <div class="inv-section-label">메인 저장공간</div>
-            <div class="inv-grid" id="inv-grid-main"></div>
-            <div class="inv-section-label">핫바</div>
-            <div class="inv-grid" id="inv-grid-hotbar"></div>
-            <div class="inv-section-label">장비</div>
-            <div class="inv-grid inv-grid-equip" id="inv-grid-equip"></div>
-          </div>
-        </section>
-
-        <section class="card card-plugins">
-          <h2>플러그인 관리</h2>
-          <div id="drop-zone" class="drop-zone">
-            <p>.jar 파일을 여기로 드래그하거나 클릭해서 업로드</p>
-            <input id="file-input" type="file" accept=".jar" hidden />
-          </div>
-          <p class="hint">Firebase 무료 티어 용량 때문에 너무 큰 플러그인(수십 MB 이상)은 업로드가 느리거나 실패할 수 있어요.</p>
-          <ul id="plugins-list" class="plugins-list"></ul>
-        </section>
       </div>
     </main>
 
-    <p id="empty-state" class="empty-state">왼쪽에서 서버를 선택하거나, 새 서버를 추가해주세요.</p>
-  </div>
-</div>
-
-<!-- 서버 추가 모달 -->
-<div id="add-modal" class="modal hidden">
-  <div class="modal-box">
-    <h2>새 서버 추가</h2>
-    <label>서버 이름</label>
-    <input id="input-name" type="text" placeholder="예: Lab Server" />
-    <label>서버 폴더 전체 경로 (에이전트가 실행되는 컴퓨터 기준)</label>
-    <input id="input-path" type="text" placeholder="예: C:\Users\USER\Desktop\Server\Lab Sever" />
-    <label>시작 스크립트 파일명</label>
-    <input id="input-script" type="text" placeholder="예: console.bat" value="start.bat" />
-    <label>컴퓨터 ID (agent의 config.json과 동일해야 함)</label>
-    <input id="input-computer" type="text" placeholder="예: home-pc" value="home-pc" />
-    <div class="modal-buttons">
-      <button id="btn-cancel-add" class="btn btn-cancel">취소</button>
-      <button id="btn-confirm-add" class="btn btn-start">추가</button>
-    </div>
+    <p id="empty-state" class="empty-state">왼쪽에서 서버를 선택해주세요.</p>
   </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="firebase-config.js"></script>
-<script src="app.js"></script>
+<script src="visitor.js"></script>
 </body>
 </html>

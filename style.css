@@ -25,6 +25,51 @@ body {
 
 .hidden { display: none !important; }
 
+/* ---------- 관리자 로그인 화면 ---------- */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(95,217,122,0.08), transparent 40%),
+    var(--bg);
+}
+.login-box {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 40px;
+  width: 320px;
+  text-align: center;
+}
+.login-mark { color: var(--accent); font-size: 28px; margin-bottom: 8px; }
+.login-box h1 { font-size: 20px; margin: 0 0 4px; font-family: var(--display); }
+.login-sub { color: var(--text-dim); font-size: 13px; margin: 0 0 20px; }
+.login-box input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: #0d1017;
+  color: var(--text);
+  margin-bottom: 12px;
+  font-family: var(--mono);
+  box-sizing: border-box;
+}
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: #06110a;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--display);
+}
+.login-error { color: var(--danger); font-size: 12px; min-height: 16px; margin-top: 10px; }
+
 .topbar {
   display: flex;
   align-items: center;
