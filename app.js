@@ -1,6 +1,7 @@
 (function () {
   const dbRoot = firebase.database().ref('/servers');
   const dbComputers = firebase.database().ref('/computers');
+  const dbVisitorSettings = firebase.database().ref('/visitorSettings');
   const $ = (id) => document.getElementById(id);
 
   let servers = {};       // 전체 서버 메타/상태 캐시 (사이드바 렌더링용)
@@ -554,6 +555,33 @@
       $('input-path').value = '';
       $('input-script').value = 'start.bat';
       selectServer(id);
+    });
+  });
+
+  // ---------- 방문자 사이트 제어 ----------
+  const VS_TOGGLE_IDS = ['disabled', 'hideStatus', 'hidePlayers', 'hideMonitor', 'hideConsole', 'hideStart', 'hideMap'];
+
+  $('btn-visitor-settings').addEventListener('click', () => {
+    dbVisitorSettings.get().then((snap) => {
+      const settings = snap.val() || {};
+      VS_TOGGLE_IDS.forEach((key) => {
+        $('vs-' + key).checked = !!settings[key];
+      });
+      $('visitor-settings-modal').classList.remove('hidden');
+    });
+  });
+
+  $('btn-cancel-visitor-settings').addEventListener('click', () => {
+    $('visitor-settings-modal').classList.add('hidden');
+  });
+
+  $('btn-save-visitor-settings').addEventListener('click', () => {
+    const settings = {};
+    VS_TOGGLE_IDS.forEach((key) => {
+      settings[key] = $('vs-' + key).checked;
+    });
+    dbVisitorSettings.set(settings).then(() => {
+      $('visitor-settings-modal').classList.add('hidden');
     });
   });
 })();

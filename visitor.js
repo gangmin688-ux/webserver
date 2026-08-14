@@ -1,10 +1,41 @@
 (function () {
   const dbRoot = firebase.database().ref('/servers');
+  const dbVisitorSettings = firebase.database().ref('/visitorSettings');
   const $ = (id) => document.getElementById(id);
 
   let servers = {};
   let currentId = null;
   let currentListeners = [];
+  let visitorSettings = {};
+
+  // ---------- 방문자 사이트 제어 (관리자가 설정) ----------
+  dbVisitorSettings.on('value', (snap) => {
+    visitorSettings = snap.val() || {};
+    applyVisitorSettings();
+  });
+
+  function applyVisitorSettings() {
+    if (visitorSettings.disabled) {
+      $('lockout-screen').classList.remove('hidden');
+      $('app-root').classList.add('hidden');
+      return;
+    }
+    $('lockout-screen').classList.add('hidden');
+    $('app-root').classList.remove('hidden');
+
+    toggleFeature('status-pill', visitorSettings.hideStatus);
+    toggleFeature('players-pill', visitorSettings.hidePlayers);
+    toggleFeature('card-monitor', visitorSettings.hideMonitor);
+    toggleFeature('card-console', visitorSettings.hideConsole);
+    toggleFeature('card-power', visitorSettings.hideStart);
+    toggleFeature('card-map', visitorSettings.hideMap);
+  }
+
+  function toggleFeature(idOrClass, hidden) {
+    const el = document.getElementById(idOrClass) || document.querySelector('.' + idOrClass);
+    if (!el) return;
+    el.classList.toggle('hidden', !!hidden);
+  }
 
   // ---------- 서버 목록 (사이드바, 보기 전용) ----------
   dbRoot.on('value', (snap) => {

@@ -79,6 +79,7 @@ body {
 }
 .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; letter-spacing: 0.02em; }
 .brand-mark { color: var(--accent); }
+.topbar-buttons { display: flex; gap: 10px; }
 
 .btn {
   border: none;
@@ -454,6 +455,33 @@ body {
 }
 .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
 .modal-buttons .btn { flex: 1; }
+
+.modal-box-wide { width: 420px; }
+
+.toggle-row {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text);
+  margin: 10px 0 !important;
+  cursor: pointer;
+}
+.toggle-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+.toggle-row-main {
+  padding: 10px 12px;
+  background: var(--danger-dim);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  color: #ffd9d9;
+  font-weight: 600;
+}
+.toggle-row-main input[type="checkbox"] { accent-color: var(--danger); }
 
 @media (max-width: 900px) {
   .layout { flex-direction: column; }
